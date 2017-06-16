@@ -1,7 +1,7 @@
 const PORT = process.argv[2] || '3000',
       NAME = process.argv[3],
-      //redisUrl = "//lu-test-redis.geo-dev.moveaws.com:6379",
-      redisUrl = "//localhost:6379",
+      redisUrl = "localhost",
+      redisPort = "6379",
       endpoints = { healthCheck: {
                       path: "/health/check",
                       otherConfig: "etc"
@@ -15,18 +15,7 @@ const PORT = process.argv[2] || '3000',
       app = express(),
       nodeFetch = require('node-fetch'),
       myConfig = {name: NAME, content: {url: "http://localhost:" + PORT, endpoints: endpoints}},
-      pubsub = require('./subpub_lib');
-
-app.get('/health/configs', (req, res) => {
-    res.send(JSON.stringify(configs));
-});
-
-app.get('/health/check', (req, res) => {
-    res.send(JSON.stringify({from: NAME, status: "OK"}));
-});
-
-let configs = new pubsub(myConfig, redisUrl, {server: app, port: PORT});
-configs.setup();
+      pubsub = require('./AutoDiscovery');
 
 let rounds = () => {
     let latestConfigs = configs.getConfigs();
@@ -52,4 +41,12 @@ let rounds = () => {
     },5000);
 };
 
-rounds();
+let configs = new pubsub(myConfig, {url: redisUrl, port: redisPort}, {server: app, port: PORT}, rounds);
+
+app.get('/health/configs', (req, res) => {
+    res.send(JSON.stringify(configs));
+});
+
+app.get('/health/check', (req, res) => {
+    res.send(JSON.stringify({from: NAME, status: "OK"}));
+});
