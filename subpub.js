@@ -16,13 +16,13 @@ const PORT = process.argv[2] || '3000',
       redisSub = redis.createClient("//localhost:6379"),
       redisPub = redis.createClient("//localhost:6379"),
       myConfig = {name: NAME, url: "http://localhost:" + PORT, endpoints: endpoints},
-      nodeFetch = require('node-fetch')
+      nodeFetch = require('node-fetch'),
       _ = require('underscore');
 
 let configs = {};
 configs[myConfig.name] = {url: myConfig.url, endpoints: myConfig.endpoints};
 
-const configUpdate = (newConfigs) => {
+const configUpdate = function(newConfigs){
     let updated = false;
     for (key in newConfigs) {
         if(configs[key] === undefined ||
