@@ -11,7 +11,7 @@ No configuration, and auto discovery new services.
 AutoDiscovery_sample.js is a sample
 
 0. npm install -save auto_discovery
-1. In code: </br> `const ad = require('auto_discovery');`
+1. In code: </br> `const AutoDiscovery = require('auto_discovery');`
 2. Create an express server: </br>
       `express = require('express');` </br>
       `app = express();` </br>
@@ -22,7 +22,7 @@ AutoDiscovery_sample.js is a sample
       `redisUrl = "localhost";`</br>
       `redisPort = "6379";`
 5. Create autoDiscovery Instance: </br>
-  `AutoConfigs = new pubsub(myConfig, {url: redisUrl, port: redisPort}, {server: app, port: PORT}, null);`
-  
+  `AutoConfigs = new AutoDiscovery(myConfig, {url: redisUrl, port: redisPort}, {server: app, port: PORT}, null);`
+
   Any services using the same Redis Server will be enable with auto-discovery feature.
   Save time for configuration management, extra deployments.
